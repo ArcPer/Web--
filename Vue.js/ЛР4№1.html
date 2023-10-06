@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>SVG Адаптация</title>
+    <style>
+        /* Стили для равностороннего треугольника */
+        .triangle {
+            fill: none;
+            stroke: green;
+            stroke-width: 10;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <svg v-bind:width="svgWidth" v-bind:height="svgHeight">
+            <!-- Равносторонний треугольник -->
+            <polygon class="triangle" v-bind:points="trianglePoints" />
+        </svg>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                svgWidth: 640, // Ширина SVG
+                svgHeight: 480, // Высота SVG
+                triangleOffset: 100, // Отступ от границ SVG
+            },
+            computed: {
+                // вершин треугольника
+                trianglePoints: function () {
+                    const centerX = this.svgWidth / 2;
+                    const centerY = this.svgHeight / 2;
+                    const sideLength = this.svgWidth - 2 * this.triangleOffset;
+                    const height = (Math.sqrt(3) / 2) * sideLength;
+
+                    const x1 = centerX;
+                    const y1 = centerY - height / 2;
+                    const x2 = centerX - sideLength / 2;
+                    const y2 = centerY + height / 2;
+                    const x3 = centerX + sideLength / 2;
+                    const y3 = centerY + height / 2;
+
+                    return `${x1},${y1} ${x2},${y2} ${x3},${y3}`;
+                },
+            },
+        });
+    </script>
+</body>
+</html>
