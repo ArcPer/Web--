@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Светофор</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <style>
+    
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50vh;
+            margin: 0;
+        }
+
+        .light {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 10px;
+        }
+        .red {
+            background-color: red;
+        }
+        .yellow {
+            background-color: yellow;
+        }
+        .green {
+            background-color: green;
+        }
+        .off {
+            background-color: gray;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div>
+            <div :class="['light', currentLight === 'red' ? 'red' : 'off']">{{ currentLight === 'red' ? timer : '' }}</div>
+            <div :class="['light', currentLight === 'yellow' ? 'yellow' : 'off']"></div>
+            <div :class="['light', currentLight === 'green' ? 'green' : 'off']">{{ currentLight === 'green' ? timer : '' }}</div>
+        </div>
+        <div>
+            <input type="radio" v-model="mode" value="on"> Включен
+            <input type="radio" v-model="mode" value="paused"> Приостановлен
+            <input type="radio" v-model="mode" value="off"> Выключен
+        </div>
+        <div v-if="showSettings">
+            <label>Зеленый: <input type="number" v-model="greenTime"></label>
+            <label>Красный: <input type="number" v-model="redTime"></label>
+            <label>Желтый мерцание: <input type="number" v-model="yellowBlink"></label>
+        </div>
+        <div>
+            <input type="checkbox" v-model="showSettings"> Настройки
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                currentLight: 'red',
+                timer: 0,
+                mode: 'off',
+                greenTime: 5,
+                redTime: 5,
+                yellowBlink: 1,
+                showSettings: false
+            },
+            watch: {
+                mode: function(newVal) {
+                    if (newVal === 'on') {
+                        this.startTrafficLight();
+                    } else if (newVal === 'paused') {
+                        this.pauseTrafficLight();
+                    } else {
+                        this.stopTrafficLight();
+                    }
+                }
+            },
+            methods: {
+                startTrafficLight() {
+                    this.currentLight = 'red';
+                    this.timer = this.redTime;
+                    this.updateTrafficLight();
+                },
+                updateTrafficLight() {
+                    if (this.mode !== 'on') return;
+
+                    if (this.timer === 0) {
+                        if (this.currentLight === 'red') {
+                            this.currentLight = 'green';
+                            this.timer = this.greenTime;
+                        } else if (this.currentLight === 'green') {
+                            this.currentLight = 'yellow';
+                            this.timer = 1;
+                        } else {
+                            this.currentLight = 'red';
+                            this.timer = this.redTime;
+                        }
+                    }setTimeout(() => {
+                        if (this.currentLight === 'yellow') {
+                            this.currentLight = 'red';
+                            this.timer = this.redTime;
+                        } else {
+                            this.timer--;
+                        }
+                        this.updateTrafficLight();
+                    }, 1000);
+                },
+                pauseTrafficLight() {
+                    this.currentLight = 'yellow';
+                    setInterval(() => {
+                        if (this.mode === 'paused') {
+                            this.currentLight = this.currentLight === 'off' ? 'yellow' : 'off';
+                        }
+                    }, this.yellowBlink * 1000);
+                },
+                stopTrafficLight() {
+                    this.currentLight = 'off';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
