@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Жизненный Цикл</title>
+    <script src="https://unpkg.com/vue@3"></script>
+    <style>
+        .info-box {
+            position: fixed;
+            top: 0;
+            right: 0;
+            background-color: #33df10;
+            padding: 10px;
+            border: 1px solid #000000;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>{{ title }}</h1>
+    </div>
+    <div class="info-box" id="browser-info">
+        <h2>Вывод информации</h2>
+    </div>
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    title: 'МИИТ',
+                };
+            },
+            beforeCreate() {
+                console.info('beforeCreate');
+                appendToBrowserInfo('beforeCreate');
+            },
+            created() {
+                console.info('created');
+                appendToBrowserInfo('created');
+                window.addEventListener('keyup', this.handleKeyUp);
+            },
+            beforeMount() {
+                console.info('beforeMount');
+                appendToBrowserInfo('beforeMount');
+            },
+            mounted() {
+                console.info('mounted');
+                appendToBrowserInfo('mounted');
+            },
+            beforeUpdate() {
+                console.info('beforeUpdate');
+                appendToBrowserInfo('beforeUpdate');
+            },
+            updated() {
+                console.info('updated');
+                appendToBrowserInfo('updated');
+            },
+            beforeUnmount() {
+                console.info('beforeUnmount');
+                appendToBrowserInfo('beforeUnmount');
+                window.removeEventListener('keyup', this.handleKeyUp);
+            },
+            unmounted() {
+                console.info('unmounted');
+                appendToBrowserInfo('unmounted');
+            },
+            methods: {
+                handleKeyUp(event) {
+                    if (event.key === ' ') {
+                        this.title = 'РУТ(МИИТ)';
+                    } else if (event.key === 'Enter') {
+                        app.unmount();
+                    }
+                }
+            }
+        });
+
+        app.mount('#app');
+
+        function appendToBrowserInfo(message) {
+            const consoleInfo = document.getElementById('browser-info');
+            const p = document.createElement('p');
+            p.textContent = message;
+            consoleInfo.appendChild(p);
+        }
+    </script>
+</body>
+</html>
