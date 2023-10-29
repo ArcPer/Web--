@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Тест на Россиянина</title>
+    <style>
+        body {
+            justify-content: center;
+            align-items: center;
+            height: 50vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>Ты Росиянин?</h1>
+        <form>
+            <div v-for="(question, index) in questions" :key="index">
+                <h2>{{ question.text }}</h2>
+                <ul>
+                    <li v-for="(option, optionIndex) in question.options" :key="optionIndex">
+                        <label>
+                            <input type="checkbox" v-model="question.selectedOptions" :value="optionIndex" :disabled="submitted" />
+                            {{ option }}
+                        </label>
+                    </li>
+                </ul>
+            </div>
+            <button type="button" @click="submitAnswers" :disabled="submitted">Завершить</button>
+        </form>
+        <div v-if="submitted">
+            <h2>Результат:</h2>
+            <p>Вы набрали {{ calculateScore() }} баллов, что составляет {{ (calculateScore() / questions.length * 100).toFixed(2) }}%.</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                questions: [
+                    {
+                        text: 'Вопрос 1: Что делать если зимой холодно?',
+                        options: ['Пить', 'Греться', 'Терпеть'],
+                        selectedOptions: [],
+                        correctOptions: [0]
+                    },
+                    {
+                        text: 'Вопрос 2: что такое медведь?',
+                        options: ['Животное', 'Игрушка', 'Передовой транспорт'],
+                        selectedOptions: [],
+                        correctOptions: [2]
+                    },
+                    {
+                        text: 'Вопрос 3: Что надо говорить на фразу "сделаешь"?',
+                        options: ['Нет', 'А когда не делали? ', 'Да'],
+                        selectedOptions: [],
+                        correctOptions: [1]
+                    },
+                    {
+                        text: 'Вопрос 4: сколько субъектов в РФ?',
+                        options: ['Много', '1', '89'],
+                        selectedOptions: [],
+                        correctOptions: [2]
+                    },
+                    {
+                        text: 'Вопрос 5: Какое государство в составе РФ?',
+                        options: ['Грузия', 'Чечня', 'Армения'],
+                        selectedOptions: [],
+                        correctOptions: [1]
+                    },
+                    {
+                        text: 'Вопрос 6: Крым?',
+                        options: ['Наш', 'Есть', 'Крем'],
+                        selectedOptions: [],
+                        correctOptions: [0]
+                    },
+                    {
+                        text: 'Вопрос 7: Кто такой Хасбик?',
+                        options: ['маленький человек', 'Большой человек', 'Тип'],
+                        selectedOptions: [],
+                        correctOptions: [0]
+                    },
+                    {
+                        text: 'Вопрос 8: Где заканчивается Россия?',
+                        options: ['Где-то', 'Россия?', 'Нет конца и края'],
+                        selectedOptions: [],
+                        correctOptions: [2]
+                    },
+                    {
+                        text: 'Вопрос 9: Самый лучший вуз на земле?',
+                        options: ['МГУ', 'МИИТ', 'Гарвард'],
+                        selectedOptions: [],
+                        correctOptions: [1]
+                    },
+                    {
+                        text: 'Вопрос 10: Рюмка водки .....?',
+                        options: ['Выпить ', 'На столе', 'Пью с горла'],
+                        selectedOptions: [],
+                        correctOptions: [1]
+                    },
+                
+                ],
+                submitted: false
+            },
+            methods: {
+                submitAnswers: function () {
+                    this.submitted = true;
+                },
+                calculateScore: function () {
+                    let score = 0;
+                    for (const question of this.questions) {
+                        if (this.isQuestionCorrect(question)) {
+                            score++;
+                        }
+                    }
+                    return score;
+                },
+                isQuestionCorrect: function (question) {
+                    const selected = question.selectedOptions;
+                    const correct = question.correctOptions;
+                    if (selected.length !== correct.length) {
+                        return false;
+                    }
+                    return selected.every(option => correct.includes(option));
+                }
+            }
+        });
+    </script>
+</body>
+</html>
