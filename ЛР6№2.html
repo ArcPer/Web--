@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Калькулятор</title>
+</head>
+<body>
+  <div id="app">
+    <input v-model="expression" @input="calculateExpression" placeholder="Введите выражение">
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        expression: '',
+      },
+      methods: {
+        calculateExpression() {
+          // Реализация расчета выражения
+          let result = this.expression;
+
+          // Заменяем Sin(x) на значение
+          result = result.replace(/sin\(([^)]+)\)/g, (match, value) => {
+            return Math.sin(parseFloat(value));
+          });
+
+          // Заменяем Cos(x) на значение
+          result = result.replace(/cos\(([^)]+)\)/g, (match, value) => {
+            return Math.cos(parseFloat(value));
+          });
+
+          // Заменяем Tg(x) на значение
+          result = result.replace(/tg\(([^)]+)\)/g, (match, value) => {
+            return Math.tan(parseFloat(value));
+          });
+
+          // Заменяем Ctg(x) на значение
+          result = result.replace(/ctg\(([^)]+)\)/g, (match, value) => {
+            return 1 / Math.tan(parseFloat(value));
+          });
+
+          // Заменяем pi на значение
+          result = result.replace(/pi/g, Math.PI);
+
+          this.expression = result;
+        },
+      },
+    });
+  </script>
+</body>
+</html>
