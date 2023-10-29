@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Изменение шрифта с помощью Vue.js</title>
+    <style>
+        .text-container {
+            text-align: center;}
+        .button-container {
+            text-align: center;}
+        .button-container button {
+            margin: 5px;}
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="text-container">
+            <p v-bind:style="{'font-family': fontFamily, 'font-size': fontSize, 'color': fontColor}">
+                Эта работа претендует минимум на Великолепно
+            </p>
+        </div>
+
+        <div class="button-container">
+            <button v-on:click="changeFontFamily">Семейство шрифта</button>
+            <button v-on:click="changeFontSize">Размер шрифта</button>
+            <button v-on:click="changeFontColor">Цвет шрифта</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                fontFamilies: ['Courier New', 'Book Antiqua', 'Tahoma'],
+                fontFamilyIndex: 0,
+                fontSizes: [1, 2, 3, 4, 5, 6],
+                fontSizeIndex: 0,
+                fontColors: ['red', 'green', 'blue'],
+                fontColorIndex: 0,
+            },
+            computed: {
+                fontFamily: function () {
+                    return this.fontFamilies[this.fontFamilyIndex];
+                },
+                fontSize: function () {
+                    return this.fontSizes[this.fontSizeIndex] + 'em';
+                },
+                fontColor: function () {
+                    return this.fontColors[this.fontColorIndex];
+                },
+            },
+            methods: {
+                changeFontFamily: function () {
+                    this.fontFamilyIndex = (this.fontFamilyIndex + 1) % this.fontFamilies.length;
+                },
+                changeFontSize: function () {
+                    this.fontSizeIndex = (this.fontSizeIndex + 1) % this.fontSizes.length;
+                },
+                changeFontColor: function () {
+                    this.fontColorIndex = (this.fontColorIndex + 1) % this.fontColors.length;
+                },
+            },
+        });
+    </script>
+</body>
+</html>
